@@ -91,8 +91,16 @@ export default function CreateWorkout({ initDate, athlete, editWorkout, onBack }
                 </div>
                 <input value={ex.name} onChange={e => updEx(i, 'name', e.target.value)} placeholder="Nombre del ejercicio" className="mb-sm" />
                 <div className="row gap-sm mb-sm">
-                  {[['sets','Series'],['reps','Reps'],['execTime','T.Ejec (s)'],['weight','Peso (kg)'],['rir','RIR'],['restTime','Descanso (s)']].map(([key, lbl]) => (
-                    <div key={key} style={{ flex: 1, minWidth: '30%' }}>
+                  {[['sets','Series'],['reps','Reps'],['execTime','T.Ejec (s)']].map(([key, lbl]) => (
+                    <div key={key} style={{ flex: 1 }}>
+                      <div style={{ fontSize: 10, color: '#AAAAAA', marginBottom: 4 }}>{lbl}</div>
+                      <input value={ex[key]} onChange={e => updEx(i, key, e.target.value)} placeholder="—" type="number" style={{ textAlign: 'center', padding: '8px 4px' }} />
+                    </div>
+                  ))}
+                </div>
+                <div className="row gap-sm mb-sm">
+                  {[['weight','Peso (kg)'],['rir','RIR'],['restTime','Descanso (s)']].map(([key, lbl]) => (
+                    <div key={key} style={{ flex: 1 }}>
                       <div style={{ fontSize: 10, color: '#AAAAAA', marginBottom: 4 }}>{lbl}</div>
                       <input value={ex[key]} onChange={e => updEx(i, key, e.target.value)} placeholder="—" type="number" style={{ textAlign: 'center', padding: '8px 4px' }} />
                     </div>

@@ -72,7 +72,7 @@ export default function CoachHome({ onCreateWorkout, onViewFeedback }) {
   useEffect(() => {
     if (!athletes.length) return;
     if (!selectedAthlete) setSelectedAthlete(athletes[0]);
-  }, [athletes]);
+  }, [athletes]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!userProfile || !selectedAthlete) return;

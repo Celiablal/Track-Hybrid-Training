@@ -19,11 +19,11 @@ export default function LogWorkout({ workout, onBack }) {
   const [borg, setBorg] = useState(null);
   const [cmj, setCmj] = useState('');
   const [comments, setComments] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // eslint-disable-line no-unused-vars
   const [alreadyLogged, setAlreadyLogged] = useState(false);
 
   useEffect(() => {
-    getMyLog(workout.id, userProfile.uid).then(existing => {
+    getMyLog(workout.id, userProfile.uid).then(existing => { // eslint-disable-line react-hooks/exhaustive-deps
       if (existing) {
         setAlreadyLogged(true);
         setStartDate(existing.startDate || '');

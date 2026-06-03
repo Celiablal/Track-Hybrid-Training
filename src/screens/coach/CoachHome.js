@@ -193,7 +193,12 @@ export default function CoachHome({ onCreateWorkout, onViewFeedback }) {
                   {w.type === 'strength' && w.exercises?.map((ex, i) => (
                     <div key={i} className="row-between" style={{ borderTop: '1px solid #2A2A2A', padding: '6px 0' }}>
                       <span className="fs-sm">{ex.name}</span>
-                      <span className="fs-sm text-green">{ex.sets}×{ex.reps} · {ex.weight}kg · RIR {ex.rir}</span>
+                      <span className="fs-sm text-green">
+                        {ex.sets}×{ex.reps || (ex.execTime ? `${ex.execTime}s` : '—')}
+                        {ex.weight ? ` · ${ex.weight}kg` : ''}
+                        {ex.rir !== '' && ex.rir !== undefined ? ` · RIR ${ex.rir}` : ''}
+                        {ex.restTime ? ` · 🕐${ex.restTime}s` : ''}
+                      </span>
                     </div>
                   ))}
                   {w.type === 'running' && w.series?.map((s, i) => (

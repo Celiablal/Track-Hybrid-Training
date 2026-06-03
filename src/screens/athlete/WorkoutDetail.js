@@ -20,7 +20,14 @@ export default function WorkoutDetail({ workout, onBack, onLog }) {
               <div className="tag text-green mb-sm" style={{ fontSize: 11 }}>#{i + 1}</div>
               <div className="fw-700 fs-md mb-md">{ex.name || 'Ejercicio'}</div>
               <div className="metrics-grid">
-                {[['Series', ex.sets, '#00E676'], ['Reps', ex.reps, '#00E676'], ['Peso', ex.weight ? `${ex.weight}kg` : '—', '#FFD600'], ['RIR', ex.rir !== '' ? ex.rir : '—', '#FFD600']].map(([lbl, val, col]) => (
+                {[
+                  ['Series', ex.sets, '#00E676'],
+                  ['Reps', ex.reps, '#00E676'],
+                  ex.execTime ? ['T.Ejec', `${ex.execTime}s`, '#69F0AE'] : null,
+                  ['Peso', ex.weight ? `${ex.weight}kg` : '—', '#FFD600'],
+                  ['RIR', ex.rir !== '' && ex.rir !== undefined ? ex.rir : '—', '#FFD600'],
+                  ex.restTime ? ['Descanso', `${ex.restTime}s`, '#AAAAAA'] : null,
+                ].filter(Boolean).map(([lbl, val, col]) => (
                   <div key={lbl} className="metric-box">
                     <div className="metric-val" style={{ color: col }}>{val}</div>
                     <div className="metric-lbl">{lbl}</div>

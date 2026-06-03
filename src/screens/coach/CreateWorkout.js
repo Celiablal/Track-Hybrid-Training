@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { saveWorkout, updateWorkout, getWeekDays, getMonday } from '../../services/workoutService';
 
-const emptyEx = () => ({ name: '', sets: '', reps: '', weight: '', rir: '', notes: '', videoUrl: '' });
+const emptyEx = () => ({ name: '', sets: '', reps: '', execTime: '', weight: '', rir: '', restTime: '', notes: '', videoUrl: '' });
 const emptySerie = () => ({ distance: '', duration: '', speed: '' });
 
 export default function CreateWorkout({ initDate, athlete, editWorkout, onBack }) {
@@ -91,8 +91,8 @@ export default function CreateWorkout({ initDate, athlete, editWorkout, onBack }
                 </div>
                 <input value={ex.name} onChange={e => updEx(i, 'name', e.target.value)} placeholder="Nombre del ejercicio" className="mb-sm" />
                 <div className="row gap-sm mb-sm">
-                  {[['sets','Series'],['reps','Reps'],['weight','Peso (kg)'],['rir','RIR']].map(([key, lbl]) => (
-                    <div key={key} style={{ flex: 1 }}>
+                  {[['sets','Series'],['reps','Reps'],['execTime','T.Ejec (s)'],['weight','Peso (kg)'],['rir','RIR'],['restTime','Descanso (s)']].map(([key, lbl]) => (
+                    <div key={key} style={{ flex: 1, minWidth: '30%' }}>
                       <div style={{ fontSize: 10, color: '#AAAAAA', marginBottom: 4 }}>{lbl}</div>
                       <input value={ex[key]} onChange={e => updEx(i, key, e.target.value)} placeholder="—" type="number" style={{ textAlign: 'center', padding: '8px 4px' }} />
                     </div>

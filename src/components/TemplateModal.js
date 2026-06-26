@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getTemplates, deleteTemplate } from '../../services/workoutService';
+import { getTemplates, deleteTemplate } from '../services/workoutService';
 
 export default function TemplateModal({ coachId, onSelect, onClose }) {
   const [templates, setTemplates] = useState([]);

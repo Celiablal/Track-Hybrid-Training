@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { getAthleteWorkoutsForCoach, deleteWorkout, getMonday, getWeekDays, formatWeekRange, getLogs } from '../../services/workoutService';
+import { getAthleteWorkoutsForCoach, deleteWorkout, saveTemplate, getMonday, getWeekDays, formatWeekRange, getLogs } from '../../services/workoutService';
 
 const ZONE_LABELS = {
   'head':'Cabeza','neck':'Cuello','l-sho':'Hombro Izq','r-sho':'Hombro Der',
@@ -50,7 +50,7 @@ const exportWeeklyCSV = async (athlete, workouts, weekDays) => {
   }
 
   const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
-  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -83,6 +83,13 @@ export default function CoachHome({ onCreateWorkout, onViewFeedback }) {
   const nextWeek = () => { const d = new Date(monday); d.setDate(d.getDate() + 7); setMonday(d); };
 
   const dayWorkouts = workouts.filter(w => w.dateStr === selectedDate);
+
+  const handleSaveTemplate = async (w) => {
+    const name = window.prompt(`Nombre de la plantilla para "${w.title}":`, w.title);
+    if (!name) return;
+    await saveTemplate(userProfile.uid, w, name.trim());
+    alert('✅ Plantilla guardada correctamente');
+  };
 
   return (
     <div className="screen">
@@ -184,6 +191,7 @@ export default function CoachHome({ onCreateWorkout, onViewFeedback }) {
                       {w.type === 'strength' ? '🏋️ Fuerza' : '🏃 Carrera'}
                     </span>
                     <div className="row gap-sm">
+                      <button className="btn-ghost btn-sm" title="Guardar como plantilla" onClick={() => handleSaveTemplate(w)}>💾</button>
                       <button className="btn-ghost btn-sm" onClick={() => onViewFeedback(w)}>📊</button>
                       <button className="btn-ghost btn-sm" onClick={() => onCreateWorkout(selectedDate, selectedAthlete, w)}>✏️</button>
                       <button className="btn-danger btn-sm" onClick={() => { if (window.confirm('¿Eliminar?')) deleteWorkout(w.id); }}>🗑️</button>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { saveWorkout, updateWorkout, getWeekDays, getMonday } from '../../services/workoutService';
+import TemplateModal from '../../components/TemplateModal';
 
 const emptyEx = () => ({ name: '', sets: '', reps: '', execTime: '', weight: '', rir: '', restTime: '', notes: '', videoUrl: '' });
 const emptySerie = () => ({ distance: '', duration: '', speed: '' });
@@ -14,6 +15,7 @@ export default function CreateWorkout({ initDate, athlete, editWorkout, onBack }
   const [exercises, setExercises] = useState(editWorkout?.exercises || [emptyEx()]);
   const [series, setSeries] = useState(editWorkout?.series || [emptySerie()]);
   const [loading, setLoading] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
 
   // Genera la semana del día seleccionado para el selector de fecha
   const monday = getMonday(new Date(dateStr + 'T12:00:00'));
@@ -21,6 +23,16 @@ export default function CreateWorkout({ initDate, athlete, editWorkout, onBack }
 
   const updEx = (i, f, v) => { const u = [...exercises]; u[i] = { ...u[i], [f]: v }; setExercises(u); };
   const updSer = (i, f, v) => { const u = [...series]; u[i] = { ...u[i], [f]: v }; setSeries(u); };
+
+  // Carga una plantilla y rellena el formulario
+  const loadTemplate = (t) => {
+    setType(t.type);
+    setTitle(t.title);
+    setNotes(t.notes || '');
+    setExercises(t.exercises?.length ? t.exercises.map(ex => ({ ...ex })) : [emptyEx()]);
+    setSeries(t.series?.length ? t.series.map(s => ({ ...s })) : [emptySerie()]);
+    setShowTemplates(false);
+  };
 
   const handle = async (e) => {
     e.preventDefault();
@@ -43,8 +55,33 @@ export default function CreateWorkout({ initDate, athlete, editWorkout, onBack }
   return (
     <div className="screen">
       <button onClick={onBack} style={{ background: 'none', border: 'none', color: '#00E676', fontWeight: 600, fontSize: 15, cursor: 'pointer', padding: 0, marginBottom: 20 }}>← Atrás</button>
-      <div className="fw-900 fs-lg mb-sm">{editWorkout ? 'Editar sesión' : 'Nueva sesión'}</div>
+
+      {/* Header con botón plantillas */}
+      <div className="row-between mb-sm">
+        <div className="fw-900 fs-lg">{editWorkout ? 'Editar sesión' : 'Nueva sesión'}</div>
+        {!editWorkout && (
+          <button
+            type="button"
+            onClick={() => setShowTemplates(true)}
+            style={{
+              background: 'transparent', border: '1px solid #00E67660',
+              color: '#00E676', borderRadius: 8, padding: '8px 14px',
+              fontSize: 13, fontWeight: 700, cursor: 'pointer', width: 'auto',
+            }}>
+            📋 Plantillas
+          </button>
+        )}
+      </div>
       <div className="text-muted fs-sm mb-lg">Atleta: <strong style={{ color: '#00E676' }}>{athlete?.name}</strong></div>
+
+      {/* Modal de plantillas */}
+      {showTemplates && (
+        <TemplateModal
+          coachId={userProfile.uid}
+          onSelect={loadTemplate}
+          onClose={() => setShowTemplates(false)}
+        />
+      )}
 
       <form onSubmit={handle}>
         {/* Selector de fecha por día de semana */}

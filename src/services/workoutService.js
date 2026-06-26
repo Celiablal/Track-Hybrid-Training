@@ -21,7 +21,7 @@ export const getWeekDays = (monday) => {
     d.setDate(monday.getDate() + i);
     days.push({
       date: d,
-      dateStr: d.toISOString().split('T')[0], // YYYY-MM-DD
+      dateStr: d.toISOString().split('T')[0],
       short: names[i],
       full: fullNames[i],
       display: `${names[i]} ${d.getDate()} ${d.toLocaleString('es-ES', { month: 'short' })}`,
@@ -97,4 +97,32 @@ export const getLogs = async (workoutId) => {
 export const getMyLog = async (workoutId, athleteId) => {
   const snap = await getDoc(doc(db, 'workouts', workoutId, 'logs', athleteId));
   return snap.exists() ? snap.data() : null;
+};
+
+// ── PLANTILLAS ───────────────────────────────────────────────────────────────
+
+export const saveTemplate = async (coachId, workout, templateName) => {
+  const ref = doc(collection(db, 'templates'));
+  await setDoc(ref, {
+    id: ref.id,
+    coachId,
+    name: templateName,
+    type: workout.type,
+    title: workout.title,
+    notes: workout.notes || '',
+    exercises: workout.exercises || [],
+    series: workout.series || [],
+    createdAt: new Date().toISOString(),
+  });
+  return ref.id;
+};
+
+export const getTemplates = async (coachId) => {
+  const q = query(collection(db, 'templates'), where('coachId', '==', coachId));
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+};
+
+export const deleteTemplate = async (templateId) => {
+  await deleteDoc(doc(db, 'templates', templateId));
 };
